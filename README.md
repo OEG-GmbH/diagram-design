@@ -397,7 +397,7 @@ Every diagram template gives the inline SVG an accessible name and description: 
 
 ### Offline fonts
 
-By default a diagram loads Instrument Serif, Geist and Geist Mono from Google Fonts, the only network request it makes. Ask for **system fonts** (or set the font source to `system` in your style guide) and the file makes no network requests at all: the stacks fall back to the platform's own serif, sans and monospace faces. See [Font source](skills/diagram-design/references/style-guide.md#font-source).
+In this fork a diagram makes no network request by default: the font source is `system` and the stacks fall back to the platform's own serif, sans and monospace faces. See [Font source](skills/diagram-design/references/style-guide.md#font-source).
 
 ### Manual override
 
@@ -525,7 +525,7 @@ Or just ask in natural language:
 "Save my-diagram.html as PNG."
 ```
 
-- **SVG** extracts the `<svg>` node and injects Google Fonts so it renders standalone in browsers, Figma, and Illustrator. Animation bindings follow namespaced keyframes even when property names use CSS escapes. Pass `--system-fonts` to skip the font import for offline use.
+- **SVG** extracts the `<svg>` node and (with the opt-in `web` font source; pass `--system-fonts` otherwise, the fork default) injects Google Fonts so it renders standalone in browsers, Figma, and Illustrator. Animation bindings follow namespaced keyframes even when property names use CSS escapes. Pass `--system-fonts` to skip the font import for offline use.
 - **PNG** rasterizes the diagram via Playwright at 2× by default. One-time setup: `pip install playwright && playwright install chromium`.
 
 Both formats are diagram-only: editorial cards and headers from `-full` variants aren't included. For a screenshot of the full editorial layout, use your browser's print-to-PDF or full-page screenshot. See [`skills/diagram-design/references/export.md`](skills/diagram-design/references/export.md) for the full procedure.

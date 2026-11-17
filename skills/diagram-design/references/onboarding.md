@@ -106,7 +106,7 @@ Do not replace a detected brand family with `serif`, `system-ui`, or `ui-monospa
 
 1. Record the computed family and weight used by the sampled heading, body, and technical-label elements.
 2. Trace each family to its source: an existing Google Fonts stylesheet, an installed/system stack, or a custom-hosted `@font-face`.
-3. If it is available through Google Fonts, carry the exact family name, weights, and approved stylesheet into the style guide and generated HTML. The single-file allowlist accepts only a parsed HTTPS URL whose hostname is exactly `fonts.googleapis.com` and whose path is exactly `/css2`; prefix/lookalike hosts and other paths fail. Preserve an intentional system stack in order and verify the resolved family on the target machine.
+3. If it is available through Google Fonts, tell the user it needs the opt-in `web` font source (this fork defaults to `system`) and carry the exact family name, weights, and approved stylesheet into the style guide and generated HTML. The single-file allowlist accepts only a parsed HTTPS URL whose hostname is exactly `fonts.googleapis.com` and whose path is exactly `/css2`; prefix/lookalike hosts and other paths fail. Preserve an intentional system stack in order and verify the resolved family on the target machine.
 4. A custom-hosted or paid font is not compatible with the default single-file allowlist. Label that role `fallback` unless the user separately approves and packages the font; never silently add a remote font URL or claim an exact match.
 5. Verify the rendered output with `getComputedStyle`; a declared family that failed to load does not pass.
 

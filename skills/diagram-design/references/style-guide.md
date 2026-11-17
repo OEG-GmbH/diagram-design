@@ -95,30 +95,32 @@ A self-contained palette for the terminal-window primitive (see [primitive-termi
 | `arrow-label` | Geist Mono | 8px | 400, tracked 0.06em | Arrow annotations |
 | `callout` | Instrument Serif *italic* | 14px | 400 | Editorial asides only |
 
-### Font stack
-
-```html
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&family=Noto+Serif:ital@0;1&family=Noto+Sans+KR:wght@400;500;600&family=Noto+Serif+KR:wght@400&family=Noto+Sans+TC:wght@400;500;600&family=Noto+Serif+TC:wght@400&display=swap" rel="stylesheet">
-```
-
 ### Font source
 
 The font source decides whether a diagram makes any network request. It is a skin setting, so a saved profile carries it too.
 
-Font source: `web`
+Font source: `system`
 
 | Value | What ships | Network |
 |---|---|---|
-| `web` (default) | The Google Fonts `<link>` above; text renders in Instrument Serif, Geist, and Geist Mono | One stylesheet request to `fonts.googleapis.com`, plus the font files |
-| `system` | No font `<link>`; every family stack falls through to the platform's own serif, sans, and monospace faces | None |
+| `system` (default) | No font `<link>`; every family stack falls through to the platform's own serif, sans, and monospace faces | None |
+| `web` (opt-in) | The Google Fonts `<link>` under "Optional web fonts (opt-in)" below; text renders in Instrument Serif, Geist, and Geist Mono | One stylesheet request to `fonts.googleapis.com`, plus the font files |
 
-Use `system` when the user asks for offline output, system fonts, or no Google Fonts, or when this line says `system`. In `system` mode:
+Switch to `web` only when the user explicitly asks for Google Fonts or sets the font source to `web` in a profile. Otherwise stay on `system`. In `system` mode:
 
-- Omit the font `<link>` (and the export `@import`) entirely. Keep every `font-family` stack as written: each one already ends in a generic family (`serif`, `system-ui, sans-serif`, `ui-monospace, monospace`), so a viewer who has Geist installed still gets it and everyone else gets their system face.
+- Never write a font `<link>` (or an export `@import`) into a diagram. Keep every `font-family` stack as written: each one already ends in a generic family (`serif`, `system-ui, sans-serif`, `ui-monospace, monospace`), so a viewer who has Geist installed still gets it and everyone else gets their system face.
 - Fallback faces have different metrics from Geist, so keep the 8px label padding intact rather than trimming boxes to the Geist measurement.
 - Export with `python3 scripts/export_svg.py <file> --system-fonts`, and verify with `python3 scripts/self_check.py --offline <file>`, which fails if the Google Fonts link is still present.
 
 The render linter's default run (`lint-render.py` with network blocked) measures exactly this fallback rendering, so every shipped template and example is already checked in system-font mode.
+
+#### Optional web fonts (opt-in)
+
+Opt-in only, for `Font source: web`: add this one line to the `<head>` of the generated diagram. No shipped template or example carries it.
+
+```html
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&family=Noto+Serif:ital@0;1&family=Noto+Sans+KR:wght@400;500;600&family=Noto+Serif+KR:wght@400&family=Noto+Sans+TC:wght@400;500;600&family=Noto+Serif+TC:wght@400&display=swap" rel="stylesheet">
+```
 
 To keep the editorial faces with no network at all, install Instrument Serif, Geist, and Geist Mono locally (all three are SIL Open Font License) and use `system`: the stacks resolve to the installed faces first.
 
@@ -130,7 +132,7 @@ Geist and Instrument Serif carry no Hangul. A Korean `<text>` element extends it
 <text font-family="'Geist', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif">결제 서비스</text>
 ```
 
-Both Noto faces ship in the font link above, so the web font resolves before any locally installed one and the same file renders identically on macOS, Windows, and a reviewer's browser. The local families follow it for offline viewing. Page titles need the serif equivalent — `'Instrument Serif', 'Noto Serif KR', serif` — or a mixed Latin/Korean title resolves Hangul through the platform's generic serif and the two halves disagree. Google's `css2` endpoint slices Korean by unicode-range, so a diagram with a handful of Korean labels downloads only the slices it touches. The four templates carry both faces because a new diagram may contain Hangul; the shipped Latin-only examples keep the shorter link, since a file with no Hangul has nothing to resolve.
+In `web` mode both Noto faces ship in the opt-in font link above, so the web font resolves before any locally installed one. In the default `system` mode the locally installed families (Noto, Apple SD Gothic Neo, Malgun Gothic) resolve Hangul. Page titles need the serif equivalent — `'Instrument Serif', 'Noto Serif KR', serif` — or a mixed Latin/Korean title resolves Hangul through the platform's generic serif and the two halves disagree. Google's `css2` endpoint (web mode only) slices Korean by unicode-range, so a diagram with a handful of Korean labels downloads only the slices it touches.
 
 **Width budget.** Measure per character, not per script: **every Unicode wide or full-width character costs 1em, every other character costs its face's Latin advance** (0.60em sans, 0.62em mono), and nonspacing/enclosing marks cost nothing. Sum over the string and multiply by the font size for the text width, then add padding and round the box up to the next multiple of 4. `verify-treemap.py` enforces exactly this text width for treemap cell labels. The skill's `scripts/self_check.py` applies the same width, plus any letter-spacing, to text inside a visible box of any type, and fails a label that runs more than 0.3em past the box edge. Padding, rounding, and labels on paper-coloured arrow-label masks are not checked, so those stay yours to hold.
 

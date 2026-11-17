@@ -53,7 +53,7 @@ Except for the schema backfill described below, copy the body byte-for-byte. Sav
 Before onboarding overwrites a pristine working copy, and again on the first `save` or `load`, check for `~/.diagram-design/profiles/default.md`. If it is absent:
 
 1. **Read** the current package's pristine shipped `references/style-guide.md`. During onboarding, use the pre-diff body retained before Step 5 writes custom tokens.
-2. Verify it has no profile header and still has all shipped default semantic values, font families, and the shipped `Font source` value (`web`). Never snapshot a customized guide as `default`.
+2. Verify it has no profile header and still has all shipped default semantic values, font families, and the shipped `Font source` value (`system`). Never snapshot a customized guide as `default`.
 3. **Bash:** create the library with `mkdir -p ~/.diagram-design/profiles`.
 4. **Write** `default.md` as a normal profile named `Default`, slug `default`, with `source-url: none`, today's created/updated dates, and note `Pristine shipped style guide`; its body is the verified pristine guide.
 5. Re-read the written file and verify one header plus the complete body.

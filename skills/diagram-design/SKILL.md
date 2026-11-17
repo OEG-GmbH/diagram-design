@@ -195,7 +195,7 @@ Type-reference snippets write roles as placeholders: `{ink}`, `{ink @ 0.40}` for
 
 **Node treatments** (focal, backend/API/step, store/state, external/cloud, input/user, optional/async, security/boundary): fill and stroke per [style-guide.md § Node type → treatment](references/style-guide.md#node-type--treatment).
 
-**Typography:** Instrument Serif for the H1 title and italic callouts, Geist sans 600 for node names, Geist Mono for sublabels, eyebrows, and arrow labels. Sizes, weights, and the font `<link>`: [style-guide.md § Typography](references/style-guide.md#typography); per-preset type ramp: [output-spec.md](references/output-spec.md). When the user asks for offline output, system fonts, or no Google Fonts, follow [style-guide.md § Font source](references/style-guide.md#font-source).
+**Typography:** Instrument Serif for the H1 title and italic callouts, Geist sans 600 for node names, Geist Mono for sublabels, eyebrows, and arrow labels. Sizes and weights: [style-guide.md § Typography](references/style-guide.md#typography); per-preset type ramp: [output-spec.md](references/output-spec.md). Default font source is `system`: write no font `<link>` and make no network request. Google Fonts load only on an explicit opt-in, see [style-guide.md § Font source](references/style-guide.md#font-source).
 
 **Non-Latin labels** — extend the family: [Korean](references/style-guide.md#korean-labels), [Chinese](references/style-guide.md#traditional-chinese-labels), [Cyrillic](references/style-guide.md#cyrillic-labels).
 
