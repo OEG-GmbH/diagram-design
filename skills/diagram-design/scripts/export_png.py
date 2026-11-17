@@ -24,6 +24,19 @@ def exact_size_scale(value: str) -> float:
     return scale
 
 
+# fork-patch: the PNG export never talks to a remote host. Only file: and data:
+# requests pass; everything else (Google Fonts, any external link in a diagram)
+# is aborted so the render stays offline and leaks no IP or timestamp.
+LOCAL_SCHEMES = ("file:", "data:")
+
+
+def block_remote(route) -> None:
+    if route.request.url.startswith(LOCAL_SCHEMES):
+        route.continue_()
+    else:
+        route.abort()
+
+
 def rasterize(
     src: pathlib.Path,
     out: pathlib.Path,
@@ -35,7 +48,9 @@ def rasterize(
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch()
         try:
-            page = browser.new_page(device_scale_factor=scale)
+            context = browser.new_context(device_scale_factor=scale)
+            context.route("**/*", block_remote)  # fork-patch
+            page = context.new_page()
             page.goto(
                 src.resolve().as_uri() + "?motion=static",
                 wait_until="domcontentloaded",
